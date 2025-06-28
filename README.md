@@ -64,7 +64,12 @@ library-go-api
    docker-compose up --build
    ```
 
-3. Access the API server at `http://localhost:8080`.
+3. (Optional) If you add or update dependencies, run:
+   ```
+   go mod tidy
+   ```
+
+4. Access the API server at `http://localhost:8080`.
 
 ## Example API Usage (cURL)
 

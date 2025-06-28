@@ -16,6 +16,7 @@ func AddNewBook(name, author, genre, desc, sku string) (data Book, err error) {
 	data.Genre = genre
 	data.Name = name
 	data.Sku = sku
+	data.AvailableCount = 1
 	tx, err := config.DbConn.Begin(context.Background())
 	if err != nil {
 		err = fmt.Errorf("addnewbook:error init conn ")

@@ -59,14 +59,14 @@ library-go-api
    cd go-api-server
    ```
 
-2. Build and run the containers:
-   ```
-   docker-compose up --build
-   ```
-
-3. (Optional) If you add or update dependencies, run:
+2. (Optional) If you add or update dependencies, run:
    ```
    go mod tidy
+   ```
+
+3. Build and run the containers:
+   ```
+   docker-compose up --build
    ```
 
 4. Access the API server at `http://localhost:8080`.

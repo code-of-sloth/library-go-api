@@ -22,7 +22,7 @@ func LendBookToUser(userID, sku string) (err error) {
 	if err != nil {
 		err = fmt.Errorf("lendbooktouser:error checking availability of sku:%s ", sku)
 		return
-	} else if bookID != "" {
+	} else if bookID == "" {
 		err = fmt.Errorf("lendbooktouser:book is not available for lending")
 		return
 	}
@@ -44,7 +44,7 @@ func LendBookToUser(userID, sku string) (err error) {
 	_, err = br.Exec()
 	if err != nil {
 		tx.Rollback(context.Background())
-		err = fmt.Errorf("lendbooktouser:error updating lending details")
+		err = fmt.Errorf("lendbooktouser:error updating lending details %w", err)
 		return
 	}
 

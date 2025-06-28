@@ -24,7 +24,7 @@ func loadVerGrp(apiGrp *echo.Group) {
 	verGrp.DELETE("/book", handler.RemoveBook)
 	verGrp.POST("/allbook", handler.FetchBooks) //query parameter bookid
 
-	verGrp.POST("rent", handler.RentBook)
-	verGrp.POST("return", handler.ReturnBook)
+	verGrp.POST("/rent", handler.RentBook)
+	verGrp.POST("/return", handler.ReturnBook)
 
 }

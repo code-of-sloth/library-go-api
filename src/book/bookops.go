@@ -48,7 +48,11 @@ func RemoveBookByID(bookID string) (err error) {
 }
 
 func GetAvailableBooks(pageNum, pageSize int) (data []Book, err error) {
-	rows, err := config.DbConn.Query(context.Background(), "SELECT DISTINCT i.sku,i.name,i.bookdesc,i.author,i.genre,COUNT(b.bookid) OVER (PARTITION BY i.sku) FROM library.bookgroup i JOIN library.books b ON i.sku=b.sku WHERE b.isactive=true ORDER BY i.createdat LIMIT $1 OFFSET $2", pageSize, (pageNum-1)*pageSize)
+	rows, err := config.DbConn.Query(
+		context.Background(),
+		"SELECT DISTINCT i.sku,i.name,i.bookdesc,i.author,i.genre,COUNT(b.bookid) OVER (PARTITION BY i.sku),i.createdat FROM library.bookgroup i JOIN library.books b ON i.sku=b.sku WHERE b.isactive=true ORDER BY i.createdat LIMIT $1 OFFSET $2",
+		pageSize, (pageNum-1)*pageSize,
+	)
 	if err != nil {
 		err = fmt.Errorf("getavailablebooks:error querying for books %w", err)
 		return
@@ -57,7 +61,8 @@ func GetAvailableBooks(pageNum, pageSize int) (data []Book, err error) {
 	defer rows.Close()
 	for rows.Next() {
 		var bk Book
-		err = rows.Scan(&bk.Sku, &bk.Name, &bk.Desc, &bk.Author, &bk.Genre, &bk.AvailableCount)
+		var createdat any
+		err = rows.Scan(&bk.Sku, &bk.Name, &bk.Desc, &bk.Author, &bk.Genre, &bk.AvailableCount, &createdat)
 		if err != nil {
 			err = fmt.Errorf("getavailablebooks:error reading for books %w", err)
 			return

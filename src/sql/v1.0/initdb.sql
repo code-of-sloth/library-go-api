@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS library.lending(
     userid VARCHAR(15) REFERENCES library.users (userid) NOT NULL,
     bookid VARCHAR(15) REFERENCES library.books (bookid) NOT NULL,
     returndate timestamp NOT NULL,
-    returnedat timestamp NOT NULL,
+    returnedat timestamp,
     isreturned BOOLEAN NOT NULL DEFAULT false,
     createdat timestamp NOT NULL,
     updatedat timestamp NOT NULL

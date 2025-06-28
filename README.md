@@ -5,19 +5,42 @@ This project is a simple Go API server that connects to a PostgreSQL database. I
 ## Project Structure
 
 ```
-go-api-server
+library-go-api
 ├── src
-│   ├── main.go          # Entry point of the API server
-│   ├── handlers         # Contains request handlers
-│   │   └── handler.go   # Logic for processing API requests
-│   ├── models           # Defines data structures
-│   │   └── model.go     # Database entity representations
-│   └── db              # Database connection and queries
-│       └── db.go       # Functions for connecting to PostgreSQL
-├── Dockerfile           # Instructions for building the Docker image
-├── docker-compose.yml    # Defines services for Docker Compose
-├── go.mod               # Module definition and dependencies
-├── go.sum               # Dependency checksums
+│   ├── book
+│   │   ├── bookcommon.go
+│   │   ├── bookops.go
+│   │   └── lendingbook.go
+│   ├── config
+│   │   ├── constant.go
+│   │   ├── db.go
+│   │   └── init.go
+│   ├── handler
+│   │   ├── book.go
+│   │   ├── handlercommon.go
+│   │   └── user.go
+│   ├── models
+│   │   ├── bookmodals.go
+│   │   ├── usermodels.go
+│   │   └── validator.go
+│   ├── routes
+│   │   └── routesmain.go
+│   ├── sql
+│   │   └── v1.0
+│   │       └── initdb.sql
+│   ├── user
+│   │   ├── usercommon.go
+│   │   └── userops.go
+│   ├── utils
+│   │   └── common.go
+│   └── main.go
+├── .dockerignore
+├── .gitignore
+├── docker-compose.debug.yml
+├── docker-compose.yml
+├── Dockerfile
+├── go.mod
+├── go.sum
 └── README.md            # Project documentation
 ```
 
@@ -43,14 +66,71 @@ go-api-server
 
 3. Access the API server at `http://localhost:8080`.
 
-### Usage
+## Example API Usage (cURL)
 
-- The API server exposes various endpoints for interacting with the application. Refer to the API documentation for details on available routes and their usage.
+### User APIs
 
-### Contributing
+**Create a new user**
+```sh
+curl -X POST http://localhost:8080/api/v1/user \
+  -H "Content-Type: application/json" \
+  -d '{"name":"John Doe","mobileNo":"1234567890"}'
+```
 
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+**Fetch user by mobile number**
+```sh
+curl "http://localhost:8080/api/v1/user?mobilenum=1234567890"
+```
 
-### License
+**Update user information**
+```sh
+curl -X PUT http://localhost:8080/api/v1/user \
+  -H "Content-Type: application/json" \
+  -d '{"userID":"user_xxx","name":"Jane Doe","mobileNo":"1234567890"}'
+```
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+**Delete user by mobile number**
+```sh
+curl -X DELETE "http://localhost:8080/api/v1/user?mobilenum=1234567890"
+```
+
+---
+
+### Book APIs
+
+**Add a new book**
+```sh
+curl -X POST http://localhost:8080/api/v1/book \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Book Title","author":"Author Name","genre":"Fiction","desc":"Description here","sku":"BOOKSKU123"}'
+```
+
+**Remove a book by book ID**
+```sh
+curl -X DELETE "http://localhost:8080/api/v1/book?bookid=BOOKID123"
+```
+
+**Fetch available books (paginated)**
+```sh
+curl -X POST http://localhost:8080/api/v1/allbook \
+  -H "Content-Type: application/json" \
+  -d '{"pageNum":1,"pageSize":10}'
+```
+
+---
+
+### Lending APIs
+
+**Lend a book to a user**
+```sh
+curl -X POST http://localhost:8080/api/v1/rent \
+  -H "Content-Type: application/json" \
+  -d '{"userID":"user_xxx","sku":"BOOKSKU123"}'
+```
+
+**Return a book**
+```sh
+curl -X POST http://localhost:8080/api/v1/return \
+  -H "Content-Type: application/json" \
+  -d '{"userID":"user_xxx","bookID":"BOOKID123"}'
+```
